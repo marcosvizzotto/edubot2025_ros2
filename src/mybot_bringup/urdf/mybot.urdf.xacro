@@ -3,7 +3,7 @@
 
   <!-- Ajuste esses valores -->
   <xacro:property name="wheel_radius" value="0.0325"/>
-  <xacro:property name="wheel_separation" value="0.158"/>
+  <xacro:property name="wheel_separation" value="0.155"/>
 
   <link name="base_link"/>
   <link name="left_wheel_link"/>
