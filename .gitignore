@@ -1,0 +1,32 @@
+# ROS2 / colcon
+build/
+install/
+log/
+
+# VSCode / IDE
+.vscode/
+*.code-workspace
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# C/C++
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.swp
+*~

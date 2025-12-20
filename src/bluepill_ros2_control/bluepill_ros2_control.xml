@@ -1,0 +1,8 @@
+<library path="bluepill_ros2_control">
+  <class
+    name="bluepill_ros2_control/BluepillSystem"
+    type="bluepill_ros2_control::BluepillSystem"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>ros2_control SystemInterface para Bluepill via serial</description>
+  </class>
+</library>
