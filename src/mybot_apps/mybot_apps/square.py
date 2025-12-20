@@ -18,6 +18,8 @@ class SquareDriver(Node):
         self.declare_parameter('side_time', 1.5)       # s
         self.declare_parameter('start_delay', 1.0)     # s (tempo pro controller subir)
         self.declare_parameter('rate_hz', 20.0)        # Hz
+        self.declare_parameter('num_sides', 4)
+        self.declare_parameter('turn_time_scale', 1.0)
 
         self.cmd_vel_topic = self.get_parameter('cmd_vel_topic').value
         self.v = float(self.get_parameter('linear_speed').value)
@@ -25,11 +27,13 @@ class SquareDriver(Node):
         self.side_time = float(self.get_parameter('side_time').value)
         self.start_delay = float(self.get_parameter('start_delay').value)
         self.rate_hz = float(self.get_parameter('rate_hz').value)
+        self.num_sides = int(self.get_parameter('num_sides').value)
+        self.turn_time_scale = float(self.get_parameter('turn_time_scale').value)
 
         if abs(self.w) < 1e-6:
             raise ValueError("angular_speed (w) não pode ser 0.")
 
-        self.turn_time = (math.pi / 2.0) / abs(self.w)  # 90 graus em rad / rad/s
+        self.turn_time = ((math.pi / 2.0) / abs(self.w)) * self.turn_time_scale  # 90 graus em rad / rad/s
 
         self.pub = self.create_publisher(Twist, self.cmd_vel_topic, 10)
 
@@ -73,7 +77,7 @@ class SquareDriver(Node):
             self.publish_twist(0.0, self.w)
             if now >= self.deadline:
                 self.side_idx += 1
-                if self.side_idx >= 4:
+                if self.side_idx >= self.num_sides:
                     self.state = 'DONE'
                     self.deadline = now + Duration(seconds=0.2)
                     self.get_logger().info("Quadrado finalizado. Parando...")

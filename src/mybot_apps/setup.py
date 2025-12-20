@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'square = mybot_apps.square:main',
+            'joint_delta = mybot_apps.joint_delta:main',
         ],
     },
 )
