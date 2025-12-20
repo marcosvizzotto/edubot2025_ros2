@@ -1,4 +1,4 @@
-# mybot_bringup
+# My Robot Bringup
 
 Pacote de *bringup* do robô: URDF/Xacro + controllers + EKF + launch.
 

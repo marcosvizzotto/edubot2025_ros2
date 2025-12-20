@@ -1,8 +1,5 @@
-# bluepill_ros2_control
-
-Pacote ROS 2 com **hardware plugin** para `ros2_control` (`hardware_interface::SystemInterface`).
-
-Ele faz a ponte entre o ROS 2 e o **Bluepill (STM32)** via **serial**:
+# BluePill ROS2 Control
+A BluePill é uma placa de desenvolvimento eletrônico baseada no microcontrolador STM32F103C8T6, usando arquitetura ARM Cortex-M3. Este pacote: ROS 2 com **hardware plugin** para `ros2_control` (`hardware_interface::SystemInterface`). Ele faz a ponte entre o ROS 2 e o **Bluepill (STM32)** via **serial**:
 
 - **Envia comandos** para os motores no formato: `"<L,R>"`
 - **Recebe encoders absolutos** no formato: `"<ENC_L,ENC_R>"`
