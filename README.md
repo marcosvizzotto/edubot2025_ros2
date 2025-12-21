@@ -65,7 +65,7 @@ cd ~/ros2_ws
 source /opt/ros/humble/setup.bash
 rosdep install -r -y --from-paths src --ignore-src
 colcon build --symlink-install --executor sequential --parallel-workers 1
-source install/setup.bash
+source install/setup.bash 
 ```
 
 ### Dica (muito recomendada): swap para não travar compilando

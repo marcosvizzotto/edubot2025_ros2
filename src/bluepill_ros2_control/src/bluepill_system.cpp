@@ -54,6 +54,8 @@ hardware_interface::CallbackReturn BluepillSystem::on_init(const hardware_interf
   ticks_per_rev_right_ = std::stod(get("ticks_per_rev_right", std::to_string(ticks_per_rev_right_)));
   max_wheel_w_ = std::stod(get("max_wheel_angular_velocity", std::to_string(max_wheel_w_)));
   encoders_are_incremental_ = (get("encoders_are_incremental", "false") == "true");
+  cmd_scale_left_  = std::stod(get("cmd_scale_left",  "1.0"));
+  cmd_scale_right_ = std::stod(get("cmd_scale_right", "1.0"));
 
   if (info_.joints.size() != 2) {
     RCLCPP_ERROR(logger_, "Esperado 2 joints (left/right). Recebi: %zu", info_.joints.size());
@@ -150,8 +152,8 @@ hardware_interface::return_type BluepillSystem::write(const rclcpp::Time &, cons
 {
   // cmd_ chega em rad/s (do diff_drive_controller). Precisamos mandar pro Bluepill no formato <L,R>.
   // Como você não quer mexer no firmware, a saída mais segura é escalar pra [-1, 1] (ou pra faixa que seu firmware espera).
-  const double l = clamp(cmd_[0] / max_wheel_w_, -1.0, 1.0);
-  const double r = clamp(cmd_[1] / max_wheel_w_, -1.0, 1.0);
+  const double l = clamp((cmd_[0] / max_wheel_w_) * cmd_scale_left_,  -1.0, 1.0);
+  const double r = clamp((cmd_[1] / max_wheel_w_) * cmd_scale_right_, -1.0, 1.0);
 
   char buf[64];
   std::snprintf(buf, sizeof(buf), "<%.3f,%.3f>", l, r);

@@ -32,7 +32,11 @@ private:
   double ticks_per_rev_right_{748.0};
   double max_wheel_w_{20.0};              // rad/s (usado só pra escalar pro Bluepill)
   bool encoders_are_incremental_{false};  // se Bluepill manda delta por leitura
-
+  
+  // “ganho” por roda no bluepill_ros2_control
+  double cmd_scale_left_{1.0};
+  double cmd_scale_right_{1.0};
+  
   // Joint order: 0=left, 1=right
   std::vector<double> pos_{0.0, 0.0};
   std::vector<double> vel_{0.0, 0.0};

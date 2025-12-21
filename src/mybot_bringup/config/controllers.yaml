@@ -25,5 +25,5 @@ diff_drive_controller:
 
     use_stamped_vel: false
 
-    left_wheel_radius_multiplier: 1.1
+    left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0 

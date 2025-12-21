@@ -42,6 +42,8 @@
       <param name="ticks_per_rev_right">748</param>
       <param name="max_wheel_angular_velocity">20.0</param>
       <param name="encoders_are_incremental">false</param>
+      <param name="cmd_scale_left">1.0</param>
+      <param name="cmd_scale_right">1.027</param>
     </hardware>
 
     <joint name="left_wheel_joint">
