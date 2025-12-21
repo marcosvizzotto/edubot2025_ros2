@@ -38,7 +38,8 @@
       <!-- Ajuste -->
       <param name="serial_port">/dev/serial0</param>
       <param name="baud">115200</param>
-      <param name="ticks_per_rev">2112</param>
+      <param name="ticks_per_rev_left">1496</param>
+      <param name="ticks_per_rev_right">748</param>
       <param name="max_wheel_angular_velocity">20.0</param>
       <param name="encoders_are_incremental">false</param>
     </hardware>

@@ -28,7 +28,8 @@ private:
   // Params
   std::string port_{"/dev/serial0"};
   int baud_{115200};
-  double ticks_per_rev_{2048.0};
+  double ticks_per_rev_left_{1496.0};
+  double ticks_per_rev_right_{748.0};
   double max_wheel_w_{20.0};              // rad/s (usado só pra escalar pro Bluepill)
   bool encoders_are_incremental_{false};  // se Bluepill manda delta por leitura
 
