@@ -1,0 +1,65 @@
+
+TESTE:
+Terminal 1: Suba o bringup:
+ros2 launch mybot_bringup bringup.launch.py
+
+Terminal 2: Rode o joint_delta do lado ESQUERDO
+ros2 run mybot_apps joint_delta --ros-args -p joint_name:=left_wheel_joint -p physical_revs:=10
+
+Agora gire a roda esquerda na mão 30 voltas (pra qualquer sentido)
+Vai ficar imprimindo vários resultados, daí é so girar a roda na mão com o robô suspenso e fixado. Anotar quando chegar em 10, 20 e 30 voltas.
+30 voltas (teste unico, só parei de girar para anotar o valor enquando do script roda imprimindo):
+    10 voltas: [INFO] [1766273883.017182796] [joint_delta]: Δθ = 45.900 rad | rev_estimadas = 7.305
+    20 voltas: [INFO] [1766273935.341360367] [joint_delta]: Δθ = 91.839 rad | rev_estimadas = 14.617 
+    30 voltas: [INFO] [1766273987.971278995] [joint_delta]: Δθ = 137.782 rad | rev_estimadas = 21.929
+
+Pelos seus logs, o Δθ está crescendo de forma linear e estável:
+10 voltas → ~45.90 rad → ~7.305 rev
+20 voltas → ~91.84 rad → ~14.617 rev
+30 voltas → ~137.78 rad → ~21.929 rev
+
+Como transformar isso em “ticks_per_rev correto”
+A regra é:
+
+𝑡𝑖𝑐𝑘𝑠_𝑝𝑒𝑟_𝑟𝑒𝑣_𝑛𝑜𝑣𝑜 = 𝑡𝑖𝑐𝑘𝑠_𝑝𝑒𝑟_𝑟𝑒𝑣_𝑎𝑡𝑢𝑎𝑙 x (𝑟𝑒𝑣_𝑒𝑠𝑡𝑖𝑚𝑎𝑑𝑎𝑠 / 𝑟𝑒𝑣_𝑓𝑖𝑠𝑖𝑐𝑎𝑠)
+
+No seu caso (10 voltas físicas):
+    rev_estimadas = 7.305
+    rev_fisicas = 10
+
+    Então:
+    𝑡𝑖𝑐𝑘𝑠_𝑝𝑒𝑟_𝑟𝑒𝑣_𝑛𝑜𝑣𝑜 = 𝑡𝑖𝑐𝑘𝑠_𝑝𝑒𝑟_𝑟𝑒𝑣_𝑎𝑡𝑢𝑎𝑙 x 0.7305
+
+    Exemplo:
+    se hoje está ticks_per_rev_left = 1496
+    → novo ≈ 1496 * 0.7305 ≈ 1093 (estou mostrando este cálculo somente como exemplo, este teste estava errado, o resultado real é 1496)
+
+Repetir o teste para a roda da DIREITA:
+Terminal 2: Rode o joint_delta do lado direito
+ros2 run mybot_apps joint_delta --ros-args -p joint_name:=right_wheel_joint -p physical_revs:=10
+
+Corrija o header (bluepill_system.hpp)
+nano ~/ros2_ws/src/bluepill_ros2_control/include/bluepill_ros2_control/bluepill_system.hpp
+    double ticks_per_rev_left_{1496.0};
+    double ticks_per_rev_right_{748.0};
+
+Atualize o URDF/xacro com os params
+    <param name="ticks_per_rev_left">1496</param>
+    <param name="ticks_per_rev_right">748</param>
+
+roda esquerda para frente:
+[INFO] [1766276445.884405236] [joint_delta]: Δθ = 62.895 rad | rev_estimadas = 10.010
+[INFO] [1766276485.661279256] [joint_delta]: Δθ = 125.815 rad | rev_estimadas = 20.024
+[INFO] [1766276529.725911456] [joint_delta]: Δθ = 188.647 rad | rev_estimadas = 30.024
+10, 20 e 30 voltas
+
+roda direita para frente: 
+[INFO] [1766276707.758389997] [joint_delta]: Δθ = 62.882 rad | rev_estimadas = 10.008
+[INFO] [1766276741.725580875] [joint_delta]: Δθ = 125.714 rad | rev_estimadas = 20.008
+[INFO] [1766276775.384839982] [joint_delta]: Δθ = 188.554 rad | rev_estimadas = 30.009
+10, 20 e 30 voltas
+
+10 voltas → Δθ ≈ 62.83 rad (2π·10 = 62.831…)
+Você mediu 62.895 (esq) e 62.882 (dir) → erro ~0,1% (excelente).
+20 voltas → ~125.66 rad → você mediu 125.815 / 125.714
+30 voltas → ~188.50 rad → você mediu 188.647 / 188.554

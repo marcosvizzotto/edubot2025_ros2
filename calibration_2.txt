@@ -1,0 +1,169 @@
+
+teste 1:
+    Terminal 1:
+    ros2 launch mybot_bringup bringup.launch.py
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    Tudo zerado...
+
+    Terminal 2:
+    bash -c '
+    ros2 topic pub -r 20 --times 100 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.10}, angular: {z: 0.0}}";
+    ros2 topic pub -r 20 --times 20 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.0}, angular: {z: 0.0}}"
+    '
+    Distância do centro das rodas do robô (partida vs parada)=253,7cm
+    Desvio de 28,5cm para direita (o robô anda para frente fazendo uma leve curva para a direita)
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    header:
+    stamp:
+        sec: 1766317873
+        nanosec: 436618919
+    frame_id: odom
+    child_frame_id: base_link
+    pose:
+    pose:
+        position:
+        x: 2.562510508277517
+        y: -0.39714719919682306
+        z: 0.0
+        orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.1582875335914087
+        w: 0.9873930608980137
+        twist:
+    twist:
+        linear:
+        x: -6.113165529342268e-16
+        y: 0.0
+        z: 0.0
+        angular:
+        x: 0.0
+        y: 0.0
+        z: -6.661338147750939e-17
+
+Teste 2:
+    Reiniciei: bringup.launch.py
+    Terminal 1:
+    ros2 launch mybot_bringup bringup.launch.py
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    Tudo zerado.
+
+    Terminal 2:
+    bash -c '
+    ros2 topic pub -r 20 --times 100 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.10}, angular: {z: 0.0}}";
+    ros2 topic pub -r 20 --times 20 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.0}, angular: {z: 0.0}}"
+    '
+    Distância do centro das rodas do robô (partida vs parada)=253,0cm
+    Desvio de 39,7cm para direita (o robô anda para frente fazendo uma leve curva para a direita)
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    header:
+    stamp:
+        sec: 1766318491
+        nanosec: 181461929
+    frame_id: odom
+    child_frame_id: base_link
+    pose:
+    pose:
+        position:
+        x: 2.5335121961363987
+        y: -0.48657513376177597
+        z: 0.0
+        orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.18215115540402485
+        w: 0.9832705408914572
+    twist:
+    twist:
+        linear:
+        x: -7.0152217368502075e-16
+        y: 0.0
+        z: 0.0
+        angular:
+        x: 0.0
+        y: 0.0
+        z: -4.9960036108132046e-17
+
+Teste 3:
+    Reiniciei: bringup.launch.py
+    Terminal 1:
+    ros2 launch mybot_bringup bringup.launch.py
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    Tudo zerado.
+
+    Terminal 2:
+    bash -c '
+    ros2 topic pub -r 20 --times 100 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.10}, angular: {z: 0.0}}";
+    ros2 topic pub -r 20 --times 20 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.0}, angular: {z: 0.0}}"
+    '
+    Distância do centro das rodas do robô (partida vs parada)=253,5cm
+    Desvio de 41,5cm para direita (o robô anda para frente fazendo uma leve curva para a direita)
+
+    Terminal 2:
+    ros2 topic echo /diff_drive_controller/odom --once
+    header:
+    stamp:
+        sec: 1766319709
+        nanosec: 312839899
+    frame_id: odom
+    child_frame_id: base_link
+    pose:
+    pose:
+        position:
+        x: 2.537349397070522
+        y: -0.465459308919333
+        z: 0.0
+        orientation:
+        x: 0.0
+        y: 0.0
+        z: -0.19512354197312848
+        w: 0.9807786719580829
+        twist:
+    twist:
+        linear:
+        x: 4.955237609127749e-16
+        y: 0.0
+        z: 0.0
+        angular:
+        x: 0.0
+        y: 0.0
+        z: -6.661338147750939e-17
+
+Calcula:
+
+dist_odom = √((x2-x1)² + (y2-y1)²)
+
+wheel_radius_novo=wheel_radius_atual x (dist_real/dist_odom)
+
+Calcular a distância que a odom mediu em cada teste:
+
+Teste 1: √(2.5625² + 0.3971²) = 2.593 m
+Teste 2: √(2.5335² + 0.4866²) = 2.580 m
+Teste 3: √(2.5373² + 0.4655²) = 2.580 m
+
+Distância real (trena): 2.537 m, 2.530 m, 2.535 m
+
+Razão média (real/odom) ≈ 0.9806
+Então:
+wheel_radius_new = wheel_radius_old * 0.9806
+
+Se você está com wheel_radius = 0.0325, então:
+wheel_radius_new ≈ 0.0325 * 0.9806 = 0.03187 → arredonda pra 0.0319
+
+PUXANDO PARA UM LADO: no meu caso o robô faz uma leve curva para a direita:
+    O teu y final na odom está sempre negativo (~ -0.40 a -0.49 m), e você mediu desvio real grande (28–41 cm). Isso é típico de:
+    roda direita um pouco mais lenta (ou menor raio efetivo / mais atrito)
+
+    Correção rápida (no diff_drive_controller)
+    right_wheel_radius_multiplier: 0.99
+    left_wheel_radius_multiplier: 1.0
