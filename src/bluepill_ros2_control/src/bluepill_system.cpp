@@ -11,15 +11,11 @@
 #include <termios.h>
 #include <unistd.h>
 #include <sys/select.h>
-<<<<<<< HEAD
 #include <chrono>
-=======
->>>>>>> origin/main
 
 namespace bluepill_ros2_control
 {
 
-<<<<<<< HEAD
 static int32_t diff16(int32_t now, int32_t prev)
 {
   int32_t d = now - prev;
@@ -28,8 +24,6 @@ static int32_t diff16(int32_t now, int32_t prev)
   return d;
 }
 
-=======
->>>>>>> origin/main
 static speed_t to_baud(int baud)
 {
   switch (baud) {
@@ -116,12 +110,8 @@ hardware_interface::return_type BluepillSystem::read(const rclcpp::Time &, const
   }
 
   // converte ticks -> rad
-<<<<<<< HEAD
   const double ticks_to_rad_l = (2.0 * M_PI) / ticks_per_rev_left_;
   const double ticks_to_rad_r = (2.0 * M_PI) / ticks_per_rev_right_;
-=======
-  const double ticks_to_rad = (2.0 * M_PI) / ticks_per_rev_;
->>>>>>> origin/main
 
   int64_t dL = 0, dR = 0;
   if (encoders_are_incremental_) {
@@ -135,25 +125,15 @@ hardware_interface::return_type BluepillSystem::read(const rclcpp::Time &, const
       vel_[0] = vel_[1] = 0.0;
       return hardware_interface::return_type::OK;
     }
-<<<<<<< HEAD
     dL = diff16(static_cast<int32_t>(enc_l), static_cast<int32_t>(prev_enc_[0]));
     dR = diff16(static_cast<int32_t>(enc_r), static_cast<int32_t>(prev_enc_[1]));
-=======
-    dL = enc_l - prev_enc_[0];
-    dR = enc_r - prev_enc_[1];
->>>>>>> origin/main
     prev_enc_[0] = enc_l;
     prev_enc_[1] = enc_r;
   }
 
   const double dt = period.seconds();
-<<<<<<< HEAD
   const double dpos_l = static_cast<double>(dL) * ticks_to_rad_l;
   const double dpos_r = static_cast<double>(dR) * ticks_to_rad_r;
-=======
-  const double dpos_l = static_cast<double>(dL) * ticks_to_rad;
-  const double dpos_r = static_cast<double>(dR) * ticks_to_rad;
->>>>>>> origin/main
 
   pos_[0] += dpos_l;
   pos_[1] += dpos_r;
@@ -237,7 +217,6 @@ bool BluepillSystem::read_frame(std::string & out, int timeout_ms)
   out.clear();
   if (fd_ < 0) return false;
 
-<<<<<<< HEAD
   bool started = false;
   auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
 
@@ -246,20 +225,11 @@ bool BluepillSystem::read_frame(std::string & out, int timeout_ms)
     auto remaining = std::chrono::duration_cast<std::chrono::microseconds>(deadline - now);
     if (remaining.count() <= 0) break;
 
-=======
-  // lê até achar '>' (seu protocolo: <...>)
-  char c;
-  bool started = false;
-
-  auto deadline = timeout_ms;
-  while (deadline > 0) {
->>>>>>> origin/main
     fd_set set;
     FD_ZERO(&set);
     FD_SET(fd_, &set);
 
     timeval tv{};
-<<<<<<< HEAD
     tv.tv_sec  = static_cast<int>(remaining.count() / 1000000);
     tv.tv_usec = static_cast<int>(remaining.count() % 1000000);
 
@@ -296,28 +266,6 @@ bool BluepillSystem::read_frame(std::string & out, int timeout_ms)
     }
   }
 
-=======
-    tv.tv_sec = 0;
-    tv.tv_usec = 1000 * 2; // 2ms
-    int rv = select(fd_ + 1, &set, nullptr, nullptr, &tv);
-    deadline -= 2;
-
-    if (rv > 0 && FD_ISSET(fd_, &set)) {
-      ssize_t n = ::read(fd_, &c, 1);
-      if (n == 1) {
-        if (!started) {
-          if (c == '<') {
-            started = true;
-            out.push_back(c);
-          }
-          continue;
-        }
-        out.push_back(c);
-        if (c == '>') return true;
-      }
-    }
-  }
->>>>>>> origin/main
   return false;
 }
 
