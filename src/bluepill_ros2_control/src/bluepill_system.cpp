@@ -62,6 +62,8 @@ hardware_interface::CallbackReturn BluepillSystem::on_init(const hardware_interf
     return hardware_interface::CallbackReturn::ERROR;
   }
 
+  RCLCPP_WARN(logger_, "HW params: cmd_scale_left=%.3f cmd_scale_right=%.3f max_w=%.3f", cmd_scale_left_, cmd_scale_right_, max_wheel_w_);
+
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
@@ -158,6 +160,9 @@ hardware_interface::return_type BluepillSystem::write(const rclcpp::Time &, cons
   char buf[64];
   std::snprintf(buf, sizeof(buf), "<%.3f,%.3f>", l, r);
   write_frame(std::string(buf));
+
+  static int c = 0;
+  if (++c % 50 == 0) {RCLCPP_INFO(logger_, "WRITE: cmd(rad/s) L=%.3f R=%.3f -> send <%.3f,%.3f>", cmd_[0], cmd_[1], l, r);}
 
   return hardware_interface::return_type::OK;
 }

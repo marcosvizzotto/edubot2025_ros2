@@ -27,6 +27,7 @@ setup(
             'square = mybot_apps.square:main',
             'joint_delta = mybot_apps.joint_delta:main',
             'straight_hold = mybot_apps.straight_hold_heading:main',
+            'straight_calib = mybot_apps.straight_calib:main',
         ],
     },
 )
