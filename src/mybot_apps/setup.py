@@ -28,6 +28,7 @@ setup(
             'joint_delta = mybot_apps.joint_delta:main',
             'straight_hold = mybot_apps.straight_hold_heading:main',
             'straight_calib = mybot_apps.straight_calib:main',
+            'yaw_rate_hold = mybot_apps.yaw_rate_hold:main',
         ],
     },
 )

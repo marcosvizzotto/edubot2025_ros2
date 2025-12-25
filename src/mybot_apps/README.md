@@ -182,6 +182,8 @@ Checklist mínimo de diagnóstico em campo:
 
 ## 10) Girar apenas uma roda e a outra praticamente parada
 ```bash
+source install/setup.bash
+
 ros2 topic pub -r 20 --times 80 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.08}, angular: {z: +1.03}}"
 
 ros2 topic pub -r 20 --times 80 /diff_drive_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.08}, angular: {z: -1.03}}"

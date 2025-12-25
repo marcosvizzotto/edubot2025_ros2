@@ -40,10 +40,10 @@
       <param name="baud">115200</param>
       <param name="ticks_per_rev_left">1496</param>
       <param name="ticks_per_rev_right">748</param>
-      <param name="max_wheel_angular_velocity">20.0</param>
+      <param name="max_wheel_angular_velocity">60.0</param>
       <param name="encoders_are_incremental">false</param>
-      <param name="cmd_scale_left">1.0</param>
-      <param name="cmd_scale_right">1.04</param>
+      <param name="cmd_scale_left">0.96</param>
+      <param name="cmd_scale_right">1.0</param>
     </hardware>
 
     <joint name="left_wheel_joint">
